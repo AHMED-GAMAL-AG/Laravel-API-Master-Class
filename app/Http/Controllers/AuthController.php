@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\apiLoginRequest;
+use App\Traits\apiResponses;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
-    public function login()
+    use apiResponses;
+
+    public function login(apiLoginRequest $request)
     {
-        return response()->json([
-            'message' => 'Login successful',
-        ]);
+        return $this->success($request->get('email'));
     }
 }
