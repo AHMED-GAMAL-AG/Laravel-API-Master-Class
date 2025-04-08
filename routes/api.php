@@ -11,6 +11,4 @@ Route::get('/user', function (Request $request) {
 
 Route::get('/', [AuthController::class, 'login']);
 
-Route::get('/ticket' , function () {
-    return Ticket::all();
-});
+
