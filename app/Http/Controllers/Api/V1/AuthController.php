@@ -27,7 +27,11 @@ class AuthController extends Controller
             'Authenticated successfully',
             [
                 'user' => $user,
-                'token' => $user->createToken('auth_token')->plainTextToken,
+                'token' => $user->createToken(
+                    abilities: ['*'],
+                    name: 'auth_token',
+                    expiresAt: now()->addDays(7)
+                )->plainTextToken,
             ]
         );
     }
@@ -52,7 +56,7 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        auth()->logout();
+        $request->user()->currentAccessToken()->delete();
 
         return $this->successResponse('Successfully logged out');
     }
