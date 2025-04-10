@@ -14,5 +14,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('logout', [AuthController::class, 'logout'])
         ->name('api.v1.logout');
 
-    Route::apiResource('tickets', TicketController::class);
+    Route::apiResource('tickets', TicketController::class)
+        ->names('api.v1.tickets');
 });
