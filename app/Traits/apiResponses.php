@@ -4,10 +4,21 @@ namespace App\Traits;
 
 trait apiResponses
 {
-    protected function success($message, $statusCode = 200) {
+    protected function successResponse($message, $data = [], $statusCode = 200)
+    {
         return response()->json([
             'status' => 'success',
             'message' => $message,
+            'data' => $data,
+        ], $statusCode);
+    }
+
+    protected function errorResponse($message, $data = [] ,$statusCode = 400)
+    {
+        return response()->json([
+            'status' => 'error',
+            'message' => $message,
+            'data' => $data,
         ], $statusCode);
     }
 }
