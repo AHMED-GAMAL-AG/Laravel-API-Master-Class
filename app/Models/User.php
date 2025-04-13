@@ -46,4 +46,14 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Get the tickets for the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Ticket>
+     */
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class);
+    }
 }

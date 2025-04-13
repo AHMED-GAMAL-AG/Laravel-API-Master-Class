@@ -9,7 +9,7 @@ class UserResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
-     *
+     * following the JSON API spec https://jsonapi.org
      * @return array<string, mixed>
      */
     public function toArray(Request $request): array
@@ -28,6 +28,10 @@ class UserResource extends JsonResource
                         'email_verified_at' => $this->email_verified_at,
                     ]
                 ),
+            ],
+            'includes' => TicketResource::collection($this->whenLoaded('tickets')),
+            'links' => [
+                'self' => route('api.v1.users.show', $this->id),
             ],
         ];
     }
