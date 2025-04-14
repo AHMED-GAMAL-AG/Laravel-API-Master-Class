@@ -2,30 +2,27 @@
 
 namespace App\Http\Filters\Api\V1;
 
-use App\Enums\TicketStatus;
-
-class TicketFilter extends QueryFilter
+class AuthorFilter extends QueryFilter
 {
     protected $sortable = [
         'id',
-        'title',
+        'name',
+        'email',
+        'created_at',
+        'updated_at',
     ];
 
-    public function status($value)
+    public function id($value)
     {
-        $value = explode(',', $value);
-        $validStatuses = TicketStatus::toArray();
-
-        $validValue = array_filter($value, function ($value) use ($validStatuses) {
-            return in_array($value, $validStatuses);
-        });
-
-        if (!empty($validValue)) {
-            $this->builder->whereIn('status', $validValue);
-        }
+        $this->builder->whereIn('id', explode(',', $value));
     }
 
-    public function title($value)
+    public function email($value)
+    {
+        $this->builder->where('title', 'like', "%{$value}%");
+    }
+
+    public function name($value)
     {
         $this->builder->where('title', 'like', "%{$value}%");
     }

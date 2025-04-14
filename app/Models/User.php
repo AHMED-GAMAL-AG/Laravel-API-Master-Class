@@ -3,6 +3,9 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Http\Filters\Api\V1\AuthorFilter;
+use Illuminate\Database\Eloquent\Builder;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -47,13 +50,13 @@ class User extends Authenticatable
         ];
     }
 
-    /**
-     * Get the tickets for the user.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Ticket>
-     */
     public function tickets()
     {
         return $this->hasMany(Ticket::class);
+    }
+
+    public function scopeFilter(Builder $builder, AuthorFilter $filters)
+    {
+        return $filters->apply($builder);
     }
 }
