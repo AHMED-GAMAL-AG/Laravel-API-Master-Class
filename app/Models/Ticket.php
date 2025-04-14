@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Http\Filters\Api\V1\QueryFilter;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,8 +19,12 @@ class Ticket extends Model
         'description',
     ];
 
-    public function user()
+    public function author()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function scopeFilter(Builder $builder, QueryFilter $filters) {
+        return $filters->apply($builder);
     }
 }
