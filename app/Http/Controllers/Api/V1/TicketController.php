@@ -7,6 +7,8 @@ use App\Http\Filters\Api\V1\TicketFilter;
 use App\Http\Resources\Api\V1\TicketResource;
 use App\Http\Requests\Api\V1\StoreTicketRequest;
 use App\Http\Requests\Api\V1\UpdateTicketRequest;
+use App\Models\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class TicketController extends ApiController
 {
@@ -23,7 +25,22 @@ class TicketController extends ApiController
      */
     public function store(StoreTicketRequest $request)
     {
-        //
+        try {
+            $user = User::findOrFail($request->input('data.relationships.author.data.id'));
+        } catch (ModelNotFoundException $exception) {
+            $this->successResponse('User not found', [
+                'error' => 'The provided user ID does not exist.',
+            ]);
+        }
+
+        $attributes = [
+            'user_id' => $user->id,
+            'title' => $request->input('data.attributes.title'),
+            'status' => $request->input('data.attributes.status'),
+            'description' => $request->input('data.attributes.description'),
+        ];
+
+        return new TicketResource(Ticket::create($attributes));
     }
 
     /**
