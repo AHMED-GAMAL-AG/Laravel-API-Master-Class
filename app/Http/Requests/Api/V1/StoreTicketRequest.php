@@ -3,10 +3,9 @@
 namespace App\Http\Requests\Api\V1;
 
 use App\Enums\TicketStatus;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreTicketRequest extends FormRequest
+class StoreTicketRequest extends BaseTicketRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -29,21 +28,10 @@ class StoreTicketRequest extends FormRequest
             'data.attributes.status' => ['required', 'string', Rule::in(TicketStatus::toArray())],
         ];
 
-        if ($this->routeIs('api.v1.authors.store')) {
+        if ($this->routeIs('api.v1.tickets.store')) {
             $rules['data.relationships.author.data.id'] = ['required', 'integer', 'exists:users,id'];
         }
 
         return $rules;
-    }
-
-    public function messages()
-    {
-        return [
-            'data.attributes.title.required' => 'The title field is required.',
-            'data.attributes.status.required' => 'The status field is required.',
-            'data.relationships.author.data.id.required' => 'The author field is required.',
-            'data.attributes.description.required' => 'The description field is required.',
-            'data.attributes.status.in' => 'The selected status is invalid. Valid values are: ' . implode(', ', TicketStatus::toArray()),
-        ];
     }
 }

@@ -25,22 +25,7 @@ class TicketController extends ApiController
      */
     public function store(StoreTicketRequest $request)
     {
-        try {
-            $user = User::findOrFail($request->input('data.relationships.author.data.id'));
-        } catch (ModelNotFoundException $exception) {
-            $this->successResponse('User not found', [
-                'error' => 'The provided user ID does not exist.',
-            ]);
-        }
-
-        $attributes = [
-            'user_id' => $user->id,
-            'title' => $request->input('data.attributes.title'),
-            'status' => $request->input('data.attributes.status'),
-            'description' => $request->input('data.attributes.description'),
-        ];
-
-        return new TicketResource(Ticket::create($attributes));
+        return new TicketResource(Ticket::create($request->mappedAttributes()));
     }
 
     /**
@@ -51,7 +36,7 @@ class TicketController extends ApiController
         try {
             $ticket = Ticket::findOrFail($ticketId);
 
-            return TicketResource::collection(Ticket::filter($filters)->paginate());
+            return TicketResource::collection($ticket->filter($filters)->paginate());
         } catch (ModelNotFoundException $exception) {
             return $this->errorResponse('Ticket not found', [
                 'error' => 'The provided ticket ID does not exist.',
@@ -62,9 +47,18 @@ class TicketController extends ApiController
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateTicketRequest $request, Ticket $ticket)
+    public function update(UpdateTicketRequest $request,  $ticketId)
     {
-        //
+        try {
+            $ticket = Ticket::findOrFail($ticketId);
+            $ticket->update($request->mappedAttributes());
+
+            return new TicketResource($ticket);
+        } catch (ModelNotFoundException $exception) {
+            return $this->errorResponse('Ticket not found', [
+                'error' => 'The provided ticket ID does not exist.',
+            ], 404);
+        }
     }
 
     /**
