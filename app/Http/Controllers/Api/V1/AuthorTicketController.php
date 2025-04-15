@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Models\Ticket;
 use App\Http\Filters\Api\V1\TicketFilter;
 use App\Http\Requests\Api\V1\StoreTicketRequest;
 use App\Http\Resources\Api\V1\TicketResource;
-use App\Models\Ticket;
-use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class AuthorTicketController extends Controller
+class AuthorTicketController extends ApiController
 {
     public function index(TicketFilter $filters, $authorId)
     {
@@ -40,5 +39,19 @@ class AuthorTicketController extends Controller
         ];
 
         return new TicketResource(Ticket::create($attributes));
+    }
+
+    public function destroy($authorId, $ticketId)
+    {
+        try {
+            $ticket = Ticket::where('user_id', $authorId)->findOrFail($ticketId);
+            $ticket->delete();
+
+            return $this->successResponse('Ticket deleted successfully');
+        } catch (ModelNotFoundException $exception) {
+            return $this->errorResponse('Ticket not found', [
+                'error' => 'The provided ticket ID does not exist.',
+            ], 404);
+        }
     }
 }

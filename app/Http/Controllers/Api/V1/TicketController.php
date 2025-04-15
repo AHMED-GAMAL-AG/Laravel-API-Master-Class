@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Models\User;
 use App\Models\Ticket;
 use App\Http\Filters\Api\V1\TicketFilter;
 use App\Http\Resources\Api\V1\TicketResource;
 use App\Http\Requests\Api\V1\StoreTicketRequest;
 use App\Http\Requests\Api\V1\UpdateTicketRequest;
-use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class TicketController extends ApiController
@@ -46,13 +46,17 @@ class TicketController extends ApiController
     /**
      * Display the specified resource.
      */
-    public function show(Ticket $ticket)
+    public function show($ticketId, TicketFilter $filters)
     {
-        if ($this->include('author')) {
-            return new TicketResource($ticket->load('user'));
-        }
+        try {
+            $ticket = Ticket::findOrFail($ticketId);
 
-        return new TicketResource($ticket);
+            return TicketResource::collection(Ticket::filter($filters)->paginate());
+        } catch (ModelNotFoundException $exception) {
+            return $this->errorResponse('Ticket not found', [
+                'error' => 'The provided ticket ID does not exist.',
+            ], 404);
+        }
     }
 
     /**
@@ -66,8 +70,17 @@ class TicketController extends ApiController
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Ticket $ticket)
+    public function destroy($ticketId)
     {
-        //
+        try {
+            $ticket = Ticket::findOrFail($ticketId);
+            $ticket->delete();
+
+            return $this->successResponse('Ticket deleted successfully');
+        } catch (ModelNotFoundException $exception) {
+            return $this->errorResponse('Ticket not found', [
+                'error' => 'The provided ticket ID does not exist.',
+            ], 404);
+        }
     }
 }
