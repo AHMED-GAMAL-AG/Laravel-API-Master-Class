@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Traits\apiResponses;
+use App\Traits\ApiResponses;
 
 class ApiController extends Controller
 {
-    use apiResponses;
+    use ApiResponses;
 
     /**
      * Checks if a specific relationship is included in the query parameter.
