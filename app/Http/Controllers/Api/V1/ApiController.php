@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Controllers\Controller;
 use App\Traits\ApiResponses;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Gate;
 
 class ApiController extends Controller
 {
     use ApiResponses;
+
+    protected $policyClass;
 
     /**
      * Checks if a specific relationship is included in the query parameter.
@@ -30,5 +33,11 @@ class ApiController extends Controller
         $includeValues = explode(',', strtolower($pram));
 
         return in_array($relationship, $includeValues);
+    }
+
+    public function isAble($ability, $targetModel)
+    {
+        $gate = Gate::policy($targetModel::class, $this->policyClass,);
+        return $gate->authorize($ability, $targetModel);
     }
 }
