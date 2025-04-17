@@ -1,9 +1,11 @@
 <?php
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
+use App\Exceptions\Api\V1\ApiExceptions;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Illuminate\Support\Facades\Route;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -21,5 +23,22 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        $exceptions->render(function (Throwable $e, Request $request) {
+            $className = get_class($e);
+            $handlers = ApiExceptions::$handlers;
+
+            if (array_key_exists($className, $handlers)) {
+                $method = $handlers[$className];
+                return ApiExceptions::$method($e, $request);
+            }
+
+            return response()->json([
+                'error' => [
+                    'type' => basename(get_class($e)),
+                    'status' => intval($e->getCode()), // returns 0 if no code
+                    'message' =>  $e->getMessage()
+                ]
+            ]);
+        });
     })->create();
+
