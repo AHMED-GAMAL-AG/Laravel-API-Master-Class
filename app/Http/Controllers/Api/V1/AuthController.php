@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Enums\Abilities;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Traits\ApiResponses;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\V1\ApiAuthRequest;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\Api\V1\ApiAuthRequest;
 
 class AuthController extends Controller
 {
@@ -28,9 +29,9 @@ class AuthController extends Controller
             [
                 'user' => $user,
                 'token' => $user->createToken(
-                    abilities: ['*'],
                     name: 'auth_token',
-                    expiresAt: now()->addDays(7)
+                    expiresAt: now()->addDays(7),
+                    abilities: Abilities::getAbilities($user),
                 )->plainTextToken,
             ]
         );

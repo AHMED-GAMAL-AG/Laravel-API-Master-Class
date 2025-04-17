@@ -28,7 +28,15 @@ class TicketController extends ApiController
      */
     public function store(StoreTicketRequest $request)
     {
-        return new TicketResource(Ticket::create($request->mappedAttributes()));
+        try {
+            $this->isAble('store', Ticket::class);
+
+            return new TicketResource(Ticket::create($request->mappedAttributes()));
+        } catch (AuthorizationException $exception) {
+            return $this->errorResponse('Unauthorized', [
+                'error' => 'You do not have permission to create a ticket.',
+            ], 403);
+        }
     }
 
     /**
@@ -39,11 +47,17 @@ class TicketController extends ApiController
         try {
             $ticket = Ticket::findOrFail($ticketId);
 
+            $this->isAble('view', $ticket);
+
             return TicketResource::collection($ticket->filter($filters)->paginate());
         } catch (ModelNotFoundException $exception) {
             return $this->errorResponse('Ticket not found', [
                 'error' => 'The provided ticket ID does not exist.',
             ], 404);
+        } catch (AuthorizationException $exception) {
+            return $this->errorResponse('Unauthorized', [
+                'error' => 'You do not have permission to view this ticket.',
+            ], 403);
         }
     }
 

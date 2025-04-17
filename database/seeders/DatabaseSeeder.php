@@ -15,5 +15,11 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         Ticket::factory(100)->create();
+
+        User::create([
+            'name' => 'Manger',
+            'email' => 'manger@manger.com',
+            'password' => bcrypt('password'),
+        ]);
     }
 }
