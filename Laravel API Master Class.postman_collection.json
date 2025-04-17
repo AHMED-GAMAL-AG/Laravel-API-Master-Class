@@ -1,0 +1,565 @@
+{
+	"info": {
+		"_postman_id": "f4e12953-bf9a-4348-b266-c43364101a46",
+		"name": "Laravel API Master Class",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37896761"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login Request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "melyssa06@example.net",
+									"description": "email",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "password",
+									"description": "string",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register Request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "ahmed gamal",
+									"description": "string max 50 characters",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "a.g@intrazero.net",
+									"description": "a valied email",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123456",
+									"description": "string al least 6",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/register",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout Request",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/logout",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Ticket",
+			"item": [
+				{
+					"name": "Get Tickets",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/tickets?filter[status]=canceled,active&filter[title]=des&include=author&filter[createdAt]=2025-04-14,2025-04-17?sort=title",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tickets"
+							],
+							"query": [
+								{
+									"key": "filter[status]",
+									"value": "canceled,active"
+								},
+								{
+									"key": "filter[title]",
+									"value": "des"
+								},
+								{
+									"key": "include",
+									"value": "author"
+								},
+								{
+									"key": "filter[createdAt]",
+									"value": "2025-04-14,2025-04-17?sort=title"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show Ticket",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/tickets/6?include=author",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tickets",
+								"6"
+							],
+							"query": [
+								{
+									"key": "include",
+									"value": "author"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Store Ticket",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"data\": {\r\n        \"attributes\": {\r\n            \"title\": \"test2 ticket\",\r\n            \"description\": \"sacccccccccc csaa vasae ava\",\r\n            \"status\": \"active\"\r\n        },\r\n        \"relationships\": {\r\n            \"author\": {\r\n                \"data\": {\r\n                    \"id\": 10\r\n                }\r\n            }\r\n        }\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/tickets",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tickets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Ticket",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"data\": {\r\n        \"attributes\": {\r\n            \"title\": \"test233 ticket\",\r\n            \"description\": \"sa csaa vasae ava\",\r\n            \"status\": \"completed\"\r\n        },\r\n        \"relationships\": {\r\n            \"author\": {\r\n                \"data\": {\r\n                    \"id\": 6\r\n                }\r\n            }\r\n        }\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/tickets/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tickets",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Ticket",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"data\": {\r\n        \"attributes\": {\r\n            \"title\": \"test2 ticket\",\r\n            \"description\": \"sacccccccccc csaa vasae ava\",\r\n            \"status\": \"active\"\r\n        },\r\n        \"relationships\": {\r\n            \"author\": {\r\n                \"data\": {\r\n                    \"id\": 10\r\n                }\r\n            }\r\n        }\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/tickets/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tickets",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Author",
+			"item": [
+				{
+					"name": "Get Authors",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/authors?filter[id]=1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"authors"
+							],
+							"query": [
+								{
+									"key": "filter[id]",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show Author",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/authors/1?include=tickets",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"authors",
+								"1"
+							],
+							"query": [
+								{
+									"key": "include",
+									"value": "tickets"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Author Tickets",
+			"item": [
+				{
+					"name": "Get Author Tickets",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/authors/1/tickets",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"authors",
+								"1",
+								"tickets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Store Author Tickets",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"data\": {\r\n        \"attributes\": {\r\n            \"title\": \"test2 ticket\",\r\n            \"description\": \"sacccccccccc csaa vasae ava\",\r\n            \"status\": \"active\"\r\n        }\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/authors/5/tickets",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"authors",
+								"5",
+								"tickets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Author Tickets",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"data\": {\r\n        \"attributes\": {\r\n            \"title\": \"test2 ticket\",\r\n            \"description\": \"sacccccccccc csaa vasae ava\",\r\n            \"status\": \"active\"\r\n        }\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/authors/5/tickets/4",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"authors",
+								"5",
+								"tickets",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
